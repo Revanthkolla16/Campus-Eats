@@ -19,6 +19,33 @@
   }
 }
 
+@media (max-width: 940px) {
+  .hero-title {
+    font-size: 2.5rem !important;
+  }
+}
+
+@media (min-width: 841px) {
+  .hero-flex-row { flex-direction: row !important; }
+  .hero-title { font-size: 3.75rem !important; }
+  .hero-img { width: 380px !important; height: 380px !important; }
+  .hero-half { width: 50% !important; margin-bottom: 0 !important; }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .order-btn {
+    font-size: 1rem !important;
+    padding: 0.5rem 1.25rem !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero-img {
+    width: 200px !important;
+    height: 200px !important;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
