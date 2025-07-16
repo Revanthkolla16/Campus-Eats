@@ -2,7 +2,7 @@ import React from "react";
 import Button from "./Button";
 
 const HeroSection = () => (
-  <section className="flex flex-col [@media(min-width:841px)]:flex-row items-center justify-between px-4 sm:px-8 [@media(min-width:841px)]:px-16 py-12 [@media(min-width:841px)]:py-24 bg-orange-50 bg-gradient-to-br from-orange-50 via-[#FFF9F7] to-white min-h-[75vh]">
+  <section className="flex flex-col [@media(min-width:841px)]:flex-row items-center justify-between px-4 sm:px-8 [@media(min-width:841px)]:px-16 py-12 [@media(min-width:841px)]:py-24 bg-orange-50 bg-gradient-to-br from-orange-50 via-[#FFF9F7] to-white min-h-[75vh] min-h-screen">
     <div className="[@media(min-width:841px)]:w-1/2 w-full mb-6 [@media(min-width:841px)]:mb-0 flex flex-col gap-4">
       <h1 className="text-4xl sm:text-5xl [@media(min-width:841px)]:text-6xl font-extrabold text-black leading-tight mb-4 tracking-tight hero-title">
         Fresh & Affordable<br />
