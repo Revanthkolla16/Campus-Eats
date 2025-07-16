@@ -1,6 +1,7 @@
 "use client"
 import React from "react";
 import Button from "./Button";
+import Link from "next/link";
 
 const Navbar = () => {
   return (
@@ -14,8 +15,8 @@ const Navbar = () => {
       {/* Center: Menu (desktop only) */}
       <div className="hidden md:flex flex-1 justify-center">
         <ul className="flex space-x-10 lg:space-x-14 text-gray-700 font-light text-lg tracking-wide">
-          <li><a href="/" className="hover:text-orange-500 transition-colors cursor-pointer">Home</a></li>
-          <li><a href="/menu" className="hover:text-orange-500 transition-colors cursor-pointer">Menu</a></li>
+          <li><Link href="/" className="hover:text-orange-500 transition-colors cursor-pointer">Home</Link></li>
+          <li><Link href="/menu" className="hover:text-orange-500 transition-colors cursor-pointer">Menu</Link></li>
         </ul>
       </div>
       {/* Right: Cart, Login, Sign Up (desktop); Cart, Login (mobile) */}

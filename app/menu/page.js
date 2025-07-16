@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const menu = {
   Breakfast: [
@@ -51,40 +51,16 @@ const menu = {
 
 const categories = ["all", ...Object.keys(menu)];
 
-// Add this style block at the top of the file (or in a global CSS file if preferred)
-const glowStyle = `
-@keyframes orange-glow {
-  0%, 100% { box-shadow: 0 0 24px 4px rgba(251,146,60,0.4); }
-  50% { box-shadow: 0 0 36px 8px rgba(251,146,60,0.7); }
-}
-`;
-
-if (typeof window !== 'undefined' && !document.getElementById('orange-glow-style')) {
-  const style = document.createElement('style');
-  style.id = 'orange-glow-style';
-  style.innerHTML = glowStyle;
-  document.head.appendChild(style);
-}
-
 const FoodCard = ({ item }) => {
   const [qty, setQty] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <div
-      className="bg-white rounded-2xl shadow-md p-0 flex flex-col items-stretch border border-gray-100 transition-all duration-300 hover:border-orange-500 hover:-translate-y-3"
-      style={{
-        animation: 'none',
-        ...(typeof window !== 'undefined' && {
-          ...(qty === 0 && {
-            '--tw-shadow': '0 0 24px 4px rgba(251,146,60,0.4)',
-          }),
-        }),
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.animation = 'orange-glow 1.2s infinite ease-in-out';
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.animation = 'none';
-      }}
+      className={`bg-white rounded-2xl shadow-md p-0 flex flex-col items-stretch border border-gray-100 transition-all duration-300 hover:border-orange-500 hover:-translate-y-3`}
+      style={isHovered ? { animation: 'orange-glow 1.2s infinite ease-in-out' } : { animation: 'none' }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative w-full h-40 rounded-t-2xl overflow-hidden">
         <img src={item.image} alt={item.name} className="object-cover w-full h-full" />
@@ -136,6 +112,15 @@ const FoodCard = ({ item }) => {
 };
 
 const MenuPage = () => {
+  useEffect(() => {
+    if (!document.getElementById('orange-glow-style')) {
+      const style = document.createElement('style');
+      style.id = 'orange-glow-style';
+      style.innerHTML = `@keyframes orange-glow { 0%, 100% { box-shadow: 0 0 24px 4px rgba(251,146,60,0.4); } 50% { box-shadow: 0 0 36px 8px rgba(251,146,60,0.7); } }`;
+      document.head.appendChild(style);
+    }
+  }, []);
+
   const [selected, setSelected] = useState("all");
   const allItems = Object.values(menu).flat();
   const itemsToShow = selected === "all" ? allItems : menu[selected.charAt(0).toUpperCase() + selected.slice(1)];
