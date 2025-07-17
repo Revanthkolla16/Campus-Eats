@@ -1,5 +1,7 @@
 import "../app/globals.css";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { CartContextProvider } from "../context/CartContext";
 
 export default function RootLayout({ children }) {
   return (
@@ -9,8 +11,11 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
       <body style={{ fontFamily: 'Inter, Segoe UI, Helvetica Neue, Arial, sans-serif' }}>
-        <Navbar />
-        {children}
+        <CartContextProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </CartContextProvider>
       </body>
     </html>
   );

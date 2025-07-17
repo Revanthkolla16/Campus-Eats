@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "./Button";
+import Link from "next/link";
 
 const HeroSection = () => (
   <section className="flex flex-col [@media(min-width:841px)]:flex-row items-center justify-between px-4 sm:px-8 [@media(min-width:841px)]:px-16 py-12 [@media(min-width:841px)]:py-24 bg-orange-50 bg-gradient-to-br from-orange-50 via-[#FFF9F7] to-white min-h-[75vh] min-h-screen">
@@ -12,7 +13,9 @@ const HeroSection = () => (
       Pre-order meals from your college cafeteria.<br/>
       Pick a slot. Get it fresh.
       </p>
-      <Button className="order-btn bg-orange-500 text-white px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl rounded-full shadow-lg hover:scale-105 hover:bg-orange-600 transition-transform duration-200 cursor-pointer">Order Now</Button>
+      <Link href="/menu" className="order-btn bg-orange-500 text-white px-6 sm:px-8 py-3 sm:py-4 text-lg sm:text-xl rounded-full shadow-lg hover:scale-105 hover:bg-orange-600 transition-transform duration-200 cursor-pointer text-center">
+        Order Now
+      </Link>
     </div>
     <div className="[@media(min-width:841px)]:w-1/2 w-full flex justify-center">
       <div className="[@media(min-width:841px)]:p-2 p-0 flex items-center justify-center">

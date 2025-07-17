@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react";
+import { useCart } from "../../context/CartContext";
 
 const menu = {
   Breakfast: [
@@ -49,10 +50,12 @@ const menu = {
   ],
 };
 
-const categories = ["all", ...Object.keys(menu)];
+const allItems = Object.values(menu).flat();
+const categoryOrder = Object.keys(menu);
 
 const FoodCard = ({ item }) => {
-  const [qty, setQty] = useState(0);
+  const { getItemQty, addToCart, removeFromCart, setItemQty } = useCart();
+  const qty = getItemQty(item.name);
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -82,7 +85,7 @@ const FoodCard = ({ item }) => {
           {qty === 0 ? (
             <button
               className="w-36 md:w-40 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-full transition-all text-center flex items-center justify-center cursor-pointer"
-              onClick={() => setQty(1)}
+              onClick={() => addToCart(item)}
             >
               Add to Cart
             </button>
@@ -91,7 +94,7 @@ const FoodCard = ({ item }) => {
               <button
                 className="flex-1 text-xl text-white font-bold rounded-full transition min-w-0 cursor-pointer"
                 style={{padding: 0}}
-                onClick={() => setQty(qty - 1)}
+                onClick={() => removeFromCart(item.name)}
                 aria-label="Decrease quantity"
               >-</button>
               <span className="flex-1 flex items-center justify-center font-semibold text-white rounded-full text-lg bg-orange-500 min-w-0">
@@ -100,7 +103,7 @@ const FoodCard = ({ item }) => {
               <button
                 className="flex-1 text-xl text-white font-bold rounded-full transition min-w-0 cursor-pointer"
                 style={{padding: 0}}
-                onClick={() => setQty(qty + 1)}
+                onClick={() => setItemQty(item, qty + 1)}
                 aria-label="Increase quantity"
               >+</button>
             </div>
@@ -121,34 +124,95 @@ const MenuPage = () => {
     }
   }, []);
 
-  const [selected, setSelected] = useState("all");
-  const allItems = Object.values(menu).flat();
-  const itemsToShow = selected === "all" ? allItems : menu[selected.charAt(0).toUpperCase() + selected.slice(1)];
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [sort, setSort] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  // Filtering logic
+  const filterFn = item => {
+    const matchesSearch =
+      item.name.toLowerCase().includes(search.toLowerCase()) ||
+      item.description.toLowerCase().includes(search.toLowerCase());
+    const matchesType = typeFilter === "all" || item.type === typeFilter;
+    return matchesSearch && matchesType;
+  };
+
+  // Get items for the selected category (or all)
+  let itemsToShow = [];
+  if (selectedCategory === "all") {
+    itemsToShow = allItems.filter(filterFn);
+  } else {
+    itemsToShow = (menu[selectedCategory] || []).filter(filterFn);
+  }
+  if (sort === "low") itemsToShow = itemsToShow.slice().sort((a, b) => a.price - b.price);
+  if (sort === "high") itemsToShow = itemsToShow.slice().sort((a, b) => b.price - a.price);
 
   return (
-    <main className="min-h-screen pt-24 px-4 md:px-16 bg-[#FFF9F7] font-sans">
-      <h1 className="text-4xl md:text-5xl font-extrabold text-orange-500 mb-10 text-center font-sans tracking-tight">Menu</h1>
-      <div className="flex flex-wrap justify-center gap-6 mb-12">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setSelected(cat)}
-            className={`px-8 md:px-10 py-3 md:py-4 rounded-2xl border-2 text-lg font-semibold font-sans transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-orange-200 cursor-pointer
-              ${selected === cat
-                ? 'bg-orange-100 border-orange-500 text-orange-600 shadow-md scale-105'
-                : 'bg-white border-gray-300 text-gray-700 hover:bg-orange-50 hover:border-orange-300'}
-            `}
+    <main className="min-h-screen w-full pt-24 px-4 md:px-16 bg-[#FFF9F7] font-sans flex flex-col">
+      <div className="flex flex-col items-center mb-8 gap-4">
+        <div className="relative w-full max-w-xl">
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search for food..."
+            className="w-full pl-6 pr-12 py-3 rounded-full border border-orange-300 bg-white shadow focus:outline-none focus:ring-2 focus:ring-orange-400 text-lg text-black placeholder:text-gray-700 placeholder:font-medium transition-all"
+            style={{ color: 'black', backgroundColor: 'white' }}
+          />
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl pointer-events-none">
+            <i className="fa fa-search"></i>
+          </span>
+        </div>
+        <div className="flex flex-wrap justify-center gap-4 w-full max-w-xl">
+          <select
+            value={typeFilter}
+            onChange={e => setTypeFilter(e.target.value)}
+            className="px-5 py-2 rounded-full border border-orange-200 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-400 text-base shadow-sm transition-all cursor-pointer"
           >
-            {cat.charAt(0).toUpperCase() + cat.slice(1)}
+            <option value="all">All Types</option>
+            <option value="veg">Veg</option>
+            <option value="non-veg">Non-Veg</option>
+            <option value="egg">Egg</option>
+          </select>
+          <select
+            value={sort}
+            onChange={e => setSort(e.target.value)}
+            className="px-5 py-2 rounded-full border border-orange-200 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-400 text-base shadow-sm transition-all cursor-pointer"
+          >
+            <option value="">Sort by</option>
+            <option value="low">Cost: Low to High</option>
+            <option value="high">Cost: High to Low</option>
+          </select>
+        </div>
+        <div className="flex flex-wrap justify-center gap-2 w-full max-w-4xl mt-2">
+          <button
+            className={`px-5 py-2 rounded-full font-semibold text-base transition-all cursor-pointer border ${selectedCategory === "all" ? "bg-orange-500 text-white border-orange-500" : "bg-white text-gray-700 border-orange-200 hover:bg-orange-50"}`}
+            onClick={() => setSelectedCategory("all")}
+          >
+            All
           </button>
-        ))}
-      </div>
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {itemsToShow && itemsToShow.map((item, idx) => (
-            <FoodCard key={item.name + idx} item={item} />
+          {categoryOrder.map(cat => (
+            <button
+              key={cat}
+              className={`px-5 py-2 rounded-full font-semibold text-base transition-all cursor-pointer border ${selectedCategory === cat ? "bg-orange-500 text-white border-orange-500" : "bg-white text-gray-700 border-orange-200 hover:bg-orange-50"}`}
+              onClick={() => setSelectedCategory(cat)}
+            >
+              {cat}
+            </button>
           ))}
         </div>
+      </div>
+      <div className="max-w-6xl mx-auto mb-8 flex-grow">
+        {itemsToShow.length === 0 ? (
+          <div className="text-center text-gray-500 text-xl py-16">No items found.</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {itemsToShow.map((item, idx) => (
+              <FoodCard key={item.name + idx} item={item} />
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );
