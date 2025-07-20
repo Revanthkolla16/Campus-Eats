@@ -29,7 +29,7 @@ const Navbar = () => {
           >
             <i className="fa fa-shopping-cart text-2xl hover:scale-105"></i>
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
+              <span className="absolute -top-2 -right-2 bg-black text-orange-500 text-xs rounded-full px-2 py-1 font-bold">
                 {cartCount}
               </span>
             )}

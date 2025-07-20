@@ -62,6 +62,9 @@ const CartPage = () => {
           </div>
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center w-full text-center min-h-[40vh]">
+            <span className="text-6xl text-orange-400 mb-4">
+              <i className="fa fa-shopping-cart"></i>
+            </span>
             <img src="/empty-cart.svg" alt="Empty Cart" className="w-32 h-32 mb-6 opacity-80" onError={e => e.target.style.display='none'} />
             <p className="text-gray-500 text-lg mb-2">Your cart is currently empty.</p>
             <Link href="/menu" className="mt-2 bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-full font-semibold transition cursor-pointer hover:scale-105 hover:shadow-lg duration-150">Browse Menu</Link>
