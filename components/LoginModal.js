@@ -25,10 +25,10 @@ const LoginModal = ({ open, onClose, onSwitchToSignup }) => {
           </div>
           <Button className="bg-orange-500 text-white py-3 rounded-full font-bold text-lg mt-2 shadow-lg cursor-pointer transition-all hover:bg-orange-600 hover:scale-105">Login</Button>
         </form>
-        <p className="mt-6 text-center text-sm text-gray-700"> {"Don't have an account?"}" <a href="#" className="text-orange-500 font-semibold hover:underline" onClick={e => { e.preventDefault(); onClose(); onSwitchToSignup(); }}>Sign Up</a></p>
+        <p className="mt-6 text-center text-sm text-gray-700"> {"Don't have an account?"} <a href="#" className="text-orange-500 font-semibold hover:underline" onClick={e => { e.preventDefault(); onClose(); onSwitchToSignup(); }}>Sign Up</a></p>
       </div>
     </div>
   );
 };
 
-export default LoginModal; 
+export default LoginModal;
